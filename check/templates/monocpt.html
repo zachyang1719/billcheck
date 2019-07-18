@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <title>单表数值加减校验 </title>
+</head>
+<body>
+<div><h3>单表数值加减校验</h3></div>
+<div><form>
+    <select onchange="table_chosen()">
+    {% for table in table_list %}
+        {% if table == current_table %}
+        <option value={{table}} name="table_chosen" selected="selected">{{ table }}</option>
+        {% else %}
+        <option value={{table}} id={{table}} name="table_chosen">{{ table }}</option>
+        {% endif %}
+    {% endfor %}
+    </select>
+</form></div>
+<div>
+    {% for rule in rule_list %}
+    <input type="checkbox" name="rules" checked="checked" id={{rule}} class="rules"><label for={{rule}}>{{rule}}</label><br>
+    {% empty %}
+    <p>检查一下，哪里出问题了</p>
+    {% endfor %}
+</div>
+<div>
+    <span>请输入查询关键词，形如：Forder_id=O1234567890</span>&nbsp;
+    <input class="text" name="key">
+</div>
+<div>
+    <span>请输入uid</span>
+    <input class="password" name="uid">
+</div>
+<div>
+    <button onclick="run()">开始计算</button>
+</div>
+
+<script type="text/javascript">
+        function table_chosen()
+        {
+            var table_chosens = document.getElementsByName('table_chosen')
+            for (i=0; i<table_chosens.length; i++)
+            {
+                if (table_chosens[i].selected==true)
+                {
+                    //location.href.search = '='+table_chosens[i].innerHTML
+                    //document.write(location.search)
+                    if (location.search == '')
+                        {location.href=location.href+"?="+table_chosens[i].innerHTML}
+                    else
+                        {location.search= '?='+table_chosens[i].innerHTML}
+                }
+            }
+        }//alert('the table you choose is'+table_chosen.innerHTML)
+
+        function run()
+        {
+            var rule_sets =  document.getElementsByName('rules')
+            var rule_active_arr = new Array(rule_sets.length)
+            for (i=0; i<rule_sets.length; i++)
+            {
+                if (rule_sets[i].checked==false)
+                {
+                    rule_active_arr[i]=0
+                }
+                else
+                {
+                    rule_active_arr[i]=1
+                }
+            }
+            var rule_active_str = rule_active_arr.join()
+            var table_chosens = document.getElementsByName('table_chosen')
+            for (i=0; i<table_chosens.length; i++)
+            {
+                if (table_chosens[i].selected==true)
+                {
+                    var table_chosen = table_chosens[i].innerHTML
+                }
+            }
+            var key = document.getElementsByName('key')[0].value
+            var uid = document.getElementsByName('uid')[0].value
+            location.href = location.protocol+"//"+ location.host + "/check/compute"+ "?table=" + table_chosen + "&rules=" + rule_active_str + "&key=" + key + "&uid=" +uid
+        }
+    </script>
+
+</body>
+</html>

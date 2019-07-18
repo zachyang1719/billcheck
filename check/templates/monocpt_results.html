@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>单表数据校对结果</title>
+</head>
+<body>
+<div>
+    {% for result,check in results.items %}
+    {% if check == 0 %}
+    <span style="color:red">{{result}}</span><br>
+    {% else %}
+    <span style="color:blue">{{result}}</span><br>
+    {% endif %}
+    {% empty %}
+    <p>检查一下，哪里出问题了</p>
+    {% endfor %}
+</div>
+<script type="text/javascript">
+
+</script>
+
+</body>
+</html>
