@@ -13,18 +13,22 @@ class MonoComputeCheck:
         sql = self.get_sql(db_info)
         conn = DataBaseConnection(host=db_info['host'], port=db_info['port'], user=db_info['user'], passwd= db_info['passwd'], db= db_info['db'], sql=sql)
         data = conn.get_data()  #一个dict
-        # print(data)
-        check_rules = self.get_rules(db_info)  #一个装有dict的list
-        print(check_rules)
-        result = self.get_result(check_rules, data[0])
-        print(result)
-        return result
+        # print('data {} , type为{}'.format(data,type(data)))
+        if data != ():
+            check_rules = self.get_rules(db_info)  #一个装有dict的list
+            print(check_rules)
+            result = self.get_result(check_rules, data[0])
+            print(result)
+            return result
+        else:
+            # print('走入正确轨道')
+            return None
 
     def get_result(self, check_rules, data):
         result = []
         for i in check_rules:
             if i is None:
-                result.append(0)
+                result.append(2)   #未选择的为记为2
             else:
                 fields_factor = i['factors'].split('@')
                 actual_amount = data[fields_factor[0]]
@@ -35,9 +39,9 @@ class MonoComputeCheck:
                     else:
                         actual_amount -= data[fields_factor[j-1]]
                 if actual_amount == expect_amount:
-                    result.append(1)
+                    result.append(1)    #选择且校验成功的记为1
                 else:
-                    result.append(0)
+                    result.append(0)    #选择但校验失败的记为0
         return result
 
     def get_rules(self, db_info):
@@ -66,6 +70,7 @@ class MonoComputeCheck:
                 rule['result'] = formula_result
                 rules.append(rule)
         return rules
+
     def get_db_info(self,Tid):
         table_raw_info = TableSets.objects.filter(Tid=Tid)[0]
         table_info = {}

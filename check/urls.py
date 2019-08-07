@@ -18,6 +18,6 @@ from django.urls import path
 from .views import mono_computaion, mono_compute
 
 urlpatterns = [
-    path('monocpt/', mono_computaion),
+    path('monocpt/', mono_computaion, name='monocpt_pre'),
     path('compute/', mono_compute)
 ]

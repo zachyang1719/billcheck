@@ -38,25 +38,31 @@ def mono_compute(request):
     uid = request.GET.get('uid','')
     table_info_raw = table_name.split('.')
     Tid = TableSets.objects.filter(database_name=table_info_raw[0], table_name=table_info_raw[1])[0].Tid
+
     key_info_raw = key.split("=")
     key_info ={}
     key_info['key'] = key_info_raw[0]
     key_info['value'] =key_info_raw[1].strip()
+
     compute = MonoComputeCheck(Tid=Tid, rules=rule_active, key=key_info, uid=uid)
     results = compute.check_rules()
-    print('the results are {}'.format(results))
-    # print(type(results))
-    rules = RulesForMono.objects.filter(related_tables=Tid, rule_type='computation')
-    rule_dict = {}
-    rule_list=[]
-    for index, rule in enumerate(rules):
-        rule_dict['{}'.format(rule.rules_for_computation)] = results[index]
-        rule_list.append(rule.rules_for_computation)
-    print(rule_dict)
-    print(rule_dict.keys())
-    for i in rule_dict.keys():
-        print (i)
-        print(type(i))
-    print(json.dumps(rule_dict))
-    return render(request, "monocpt_results.html", context={'results': rule_dict})
+
+    if results!= None:
+        print('the results are {}'.format(results))
+        # print(type(results))
+        rules = RulesForMono.objects.filter(related_tables=Tid, rule_type='computation')
+        rule_dict = {}
+        rule_list = []
+        for index, rule in enumerate(rules):
+            rule_dict['{}'.format(rule.rules_for_computation)] = results[index]
+            rule_list.append(rule.rules_for_computation)
+        print(rule_dict)
+        # print(rule_dict.keys())
+        # for i in rule_dict.keys():
+        #     print (i)
+        #     print(type(i))
+        # print(json.dumps(rule_dict))
+        return render(request, "monocpt_results.html", context={'results': rule_dict})
+    else:
+        return HttpResponse('uid 和 搜索关键字不匹配')
     # return HttpResponse('This is another milestone,congratulations!')

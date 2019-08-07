@@ -1,24 +1,37 @@
-<!DOCTYPE html>
-<html lang="zh-Hans">
-<head>
-    <meta charset="UTF-8">
-    <title>单表数据校对结果</title>
-</head>
-<body>
-<div>
-    {% for result,check in results.items %}
-    {% if check == 0 %}
-    <span style="color:red">{{result}}</span><br>
-    {% else %}
-    <span style="color:blue">{{result}}</span><br>
-    {% endif %}
-    {% empty %}
-    <p>检查一下，哪里出问题了</p>
-    {% endfor %}
+{% extends "base.html"%}
+{% load staticfiles %}
+
+{% block title %}
+单表数据校对结果
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    检验结果(红色为不通过，蓝色为通过)
+                </div>
+                <!-- List group -->
+                <ul class="list-group">
+                    {% for rule,result in results.items %}
+                    {% if result == 0 %}
+                    <li class="list-group-item"><span style="color:red">{{rule}}</span></li>
+                    {% elif result == 1 %}
+                    <li class="list-group-item"><span style="color:blue">{{rule}}</span><br></li>
+                    {% endif %}
+                    {% empty %}
+                    <p>检查一下，哪里出问题了</p>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-<script type="text/javascript">
+{% endblock %}
 
-</script>
 
-</body>
-</html>
+
+
